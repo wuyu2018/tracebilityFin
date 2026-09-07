@@ -1,0 +1,15 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: food-traceability-frontend
+    restart: unless-stopped
+    networks:
+      - traceability-network
+    depends_on:
+      - backend
+
+networks:
+  traceability-network:
+    driver: bridge

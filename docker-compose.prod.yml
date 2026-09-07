@@ -1,0 +1,40 @@
+include:
+  - backend/docker-compose.yml
+  - frontend/docker-compose.yml
+
+services:
+  edge:
+    image: nginx:alpine
+    container_name: food-traceability-edge
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certs:/etc/nginx/certs:ro
+      - ./frontend/edge-nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./scripts/edge-entrypoint.sh:/entrypoint.sh:ro
+      - letsencrypt_etc:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    networks:
+      - traceability-network
+    depends_on:
+      - frontend
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
+
+  certbot:
+    image: certbot/certbot
+    container_name: food-traceability-certbot
+    volumes:
+      - letsencrypt_etc:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    profiles:
+      - certbot
+
+volumes:
+  letsencrypt_etc:
+  certbot_www:
+
+networks:
+  traceability-network:
+    driver: bridge

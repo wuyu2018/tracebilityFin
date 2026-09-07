@@ -1,0 +1,8 @@
+Compilation successful.  LoginAttemptService now uses StringRedisTemplate instead of non-existent RedisTemplate<String, Integer>.
+
+Check these possibilities:
+1. Are there other services that also inject RedisTemplate with specific generic types?
+2. If the container is still restarting, check `docker logs <container>` for the actual current error
+3. Confirm Redis is actually running and reachable from the backend container (check docker-compose.prod.yml network config)
+
+Run `docker logs <backend-container-name> --tail 50` to see the current startup error.

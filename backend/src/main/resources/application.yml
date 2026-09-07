@@ -1,0 +1,127 @@
+spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: food-traceability
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/food_traceability?useUnicode=true&characterEncoding=utf8&sslMode=PREFERRED&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+    anchor:
+      url: jdbc:mysql://localhost:3306/food_traceability_anchor?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      username: anchor_app_user
+      password: ${ANCHOR_DATASOURCE_PASSWORD:}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        connection-timeout: 10000
+        maximum-pool-size: 3
+        minimum-idle: 1
+        initialization-fail-timeout: -1
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: false
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: true
+
+    anchor:
+      hibernate:
+        ddl-auto: validate
+
+  sql:
+    init:
+      mode: never
+
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+      password: ${SPRING_REDIS_PASSWORD:}
+      database: ${SPRING_REDIS_DATABASE:0}
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: 1000ms
+
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+app:
+  verify-url: ${APP_VERIFY_URL:http://localhost}
+  default-admin:
+    username: ${DEFAULT_ADMIN_USERNAME:}
+    password: ${DEFAULT_ADMIN_PASSWORD:}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:*}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+jwt:
+  secret: ${JWT_SECRET:}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+blockchain:
+  rsa:
+    private-key-path: ${BLOCKCHAIN_RSA_PRIVATE_KEY:}
+    public-key-path: ${BLOCKCHAIN_RSA_PUBLIC_KEY:}
+  genesis-hash: ${BLOCKCHAIN_GENESIS_HASH:0000000000000000000000000000000000000000000000000000000000000000}
+
+consensus:
+  grpc-enabled: ${CONSENSUS_GRPC_ENABLED:false}
+  grpc-server-start: ${CONSENSUS_GRPC_SERVER_START:false}
+  grpc-server-port: ${CONSENSUS_GRPC_PORT:50051}
+  agent-id: ${CONSENSUS_AGENT_ID:ca-agent-0}
+  agent-role: ${CONSENSUS_AGENT_ROLE:PRIMARY}
+  peers:
+    - id: ca-agent-0
+      host: ${CONSENSUS_PEER0_HOST:localhost}
+      grpc-port: ${CONSENSUS_PEER0_PORT:50051}
+    - id: production-agent-1
+      host: ${CONSENSUS_PEER1_HOST:localhost}
+      grpc-port: ${CONSENSUS_PEER1_PORT:50052}
+    - id: circulation-agent-2
+      host: ${CONSENSUS_PEER2_HOST:localhost}
+      grpc-port: ${CONSENSUS_PEER2_PORT:50053}
+    - id: sales-agent-3
+      host: ${CONSENSUS_PEER3_HOST:localhost}
+      grpc-port: ${CONSENSUS_PEER3_PORT:50054}
+
+logging:
+  level:
+    root: INFO
+    com.foodtraceability: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: WARN

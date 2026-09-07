@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option java_package = "com.foodtraceability.agent.consensus.grpc";
+option java_multiple_files = true;
+
+message PbftMessageProto {
+  string type = 1;
+  string view = 2;
+  int64 sequence_number = 3;
+  string digest = 4;
+  string sender_id = 5;
+  string signature = 6;
+  int64 timestamp = 7;
+}
+
+message EndorsementRequestProto {
+  string context = 1;
+  string digest = 2;
+  string requesting_agent = 3;
+}
+
+message EndorsementResponseProto {
+  string agent_id = 1;
+  bool approved = 2;
+  string signature = 3;
+  string reason = 4;
+}
+
+message ConsensusRequestProto {
+  string context = 1;
+  string digest = 2;
+}
+
+message ConsensusResponseProto {
+  bool success = 1;
+  string message = 2;
+  int64 sequence_number = 3;
+}
+
+message BlockNotificationProto {
+  string block_hash = 1;
+  string food_id = 2;
+  string chain_type = 3;
+  int64 block_header_id = 4;
+}
+
+message AckResponseProto {
+  bool success = 1;
+  string message = 2;
+}
+
+service ConsensusService {
+  rpc InitiateConsensus(ConsensusRequestProto) returns (ConsensusResponseProto);
+
+  rpc Endorse(EndorsementRequestProto) returns (EndorsementResponseProto);
+
+  rpc SendPrePrepare(PbftMessageProto) returns (AckResponseProto);
+  rpc SendPrepare(PbftMessageProto) returns (AckResponseProto);
+  rpc SendCommit(PbftMessageProto) returns (AckResponseProto);
+
+  rpc NotifyBlock(BlockNotificationProto) returns (AckResponseProto);
+}

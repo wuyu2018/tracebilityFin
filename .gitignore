@@ -1,0 +1,132 @@
+# ==============================================
+# 🔒 安全级：绝对不能提交的敏感文件（必须保留）
+# ==============================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+*.pem
+*.key
+*.keystore
+*.jks
+*.pfx
+*.p12
+application-secret.yml
+application-secret.properties
+secrets/
+secrets.*
+config/secret/
+
+# SSL 证书
+**/*.crt
+**/*.cert
+**/*.cer
+
+
+# ==============================================
+# 📦 构建产物：自动生成，无需提交
+# ==============================================
+# Spring Boot
+**/target/
+**/build/
+**/mvnw.cmd
+**/mvnw
+!.mvn/wrapper/maven-wrapper.jar
+
+# 前端
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.nuxt/
+frontend/.output/
+frontend/coverage/
+*.log
+
+# 构建缓存
+.cache/
+.parcel-cache/
+.temp/
+.tmp/
+
+
+# ==============================================
+# 💻 IDE / 编辑器配置（每个人环境不同，不提交）
+# ==============================================
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+*~
+.DS_Store
+*.bak
+
+
+# ==============================================
+# 📝 日志文件（绝不提交）
+# ==============================================
+**/*.log
+logs/
+log/
+*.out
+*.dump
+*.stackdump
+
+
+# ==============================================
+# 🐳 Docker / 部署（本地覆盖配置不提交）
+# ==============================================
+docker-compose.override.yml
+docker-compose.dev.yml
+.dockerignore
+deploy-local.*
+.kube/config
+
+
+# ==============================================
+# ==============================================
+# 📁 AI / IDE / 文档（不提交）
+# ==============================================
+.claude/
+docs/
+.agents/
+
+# 🪟 操作系统垃圾文件
+# ==============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db:encryptable
+desktop.ini
+
+
+# ==============================================
+# ✅ 测试 / 覆盖率（不提交）
+# ==============================================
+coverage/
+jcstress/
+art/
+test-output/
+*.hprof
+
+
+# ==============================================
+# 🚫 其他敏感/自动生成文件
+# ==============================================
+*.pid
+*.pid.lock
+*.lck
+
+.env.example
+CONTEXT.md
+CLAUDE.md
+skills-lock.json
+.monkeycode/

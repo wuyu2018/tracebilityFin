@@ -1,0 +1,20 @@
+include:
+  - backend/docker-compose.yml
+  - frontend/docker-compose.yml
+
+services:
+  frontend:
+    ports:
+      - "${FRONTEND_EXPOSED_PORT:-80}:80"
+
+  backend:
+    ports:
+      - "8080:8080"
+
+  mysql:
+    ports:
+      - "3306:3306"
+
+  redis:
+    ports:
+      - "6379:6379"
