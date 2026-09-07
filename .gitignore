@@ -125,7 +125,8 @@ test-output/
 *.pid.lock
 *.lck
 
-.env.example
+# 允许提交模板，但要忽略同类的本地示例
+!.env.example
 CONTEXT.md
 CLAUDE.md
 skills-lock.json
