@@ -24,12 +24,10 @@ echo ">>> 启动 edge（只开 80 端口用于 ACME 验证）"
 docker compose -f $COMPOSE_FILE up -d edge
 sleep 3
 
-# 2. 用 certbot 申请证书
+# 2. 用 certbot 申请证书（certbot/certbot 是镜像名，服务名应为 certbot，且需启用 certbot profile）
 echo ">>> 申请 Let's Encrypt 证书 - 域名: $NGINX_HOST"
-docker compose -f $COMPOSE_FILE run --rm --no-deps \
-  -v letsencrypt_etc:/etc/letsencrypt \
-  -v certbot_www:/var/www/certbot \
-  certbot/certbot certonly --webroot -w /var/www/certbot \
+docker compose --profile certbot -f $COMPOSE_FILE run --rm --no-deps certbot \
+  certonly --webroot -w /var/www/certbot \
     --cert-name food-traceability \
     -d "$NGINX_HOST" \
     --email "$LETSENCRYPT_EMAIL" \
@@ -40,7 +38,7 @@ docker compose -f $COMPOSE_FILE down edge
 docker compose -f $COMPOSE_FILE up -d edge
 
 # 3. 设置 cron 自动续期（每 60 天）
-CRON_JOB="0 3 1 */2 * cd $(pwd) && docker compose -f $COMPOSE_FILE run --rm --no-deps certbot >/dev/null 2>&1 && docker compose -f $COMPOSE_FILE restart edge >/dev/null 2>&1"
+CRON_JOB="0 3 1 */2 * cd $(pwd) && docker compose --profile certbot -f $COMPOSE_FILE run --rm --no-deps certbot renew >/dev/null 2>&1 && docker compose -f $COMPOSE_FILE restart edge >/dev/null 2>&1"
 (crontab -l 2>/dev/null | grep -v "init-letsencrypt\|letsencrypt\|certbot"; echo "$CRON_JOB") | crontab -
 
 echo "============================================"
