@@ -3,7 +3,7 @@ services:
     image: mysql:8.0
     container_name: food-traceability-mysql
     restart: unless-stopped
-    command: --binlog-expire-logs-seconds=604800
+    command: --binlog-expire-logs-seconds=604800 --innodb-buffer-pool-size=256m --innodb-log-buffer-size=16m --max-connections=100 --tmp-table-size=32m --max-heap-table-size=32m
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -25,7 +25,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1024M
+          memory: 512M
     ports:
       - "3306:3306"
 
@@ -83,6 +83,10 @@ services:
     volumes:
       - backend_logs:/app/logs
       - ./keys:/app/keys:ro
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     networks:
       - traceability-network
     depends_on:
