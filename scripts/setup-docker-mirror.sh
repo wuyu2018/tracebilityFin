@@ -18,12 +18,12 @@ fi
 
 DAEMON_JSON="/etc/docker/daemon.json"
 
-# 默认镜像源列表（清华优先，若失效可自行调整）
+# 默认镜像源列表（按可靠性排序；Docker Hub 官方 registry 返回 401 属正常握手）
 if [ -z "$DOCKER_MIRRORS" ]; then
     DOCKER_MIRRORS="
-        https://docker.mirrors.tuna.tsinghua.edu.cn
-        https://docker.1ms.run
         https://docker.m.daocloud.io
+        https://docker.1ms.run
+        https://hub.rat.dev
         https://dockerproxy.net
     "
 fi
