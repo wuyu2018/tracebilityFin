@@ -7,10 +7,12 @@ RUN echo 'http://mirrors.aliyun.com/alpine/v3.18/main' > /etc/apk/repositories &
 WORKDIR /app
 
 COPY pom.xml .
-RUN mvn dependency:go-offline -B || mvn dependency:resolve -B
+COPY maven-settings.xml /app/maven-settings.xml
+RUN mvn -s maven-settings.xml dependency:go-offline -B || mvn -s maven-settings.xml dependency:resolve -B
+
 
 COPY src ./src
-RUN mvn clean package -Dmaven.test.skip=true
+RUN mvn -s maven-settings.xml clean package -Dmaven.test.skip=true
 
 FROM eclipse-temurin:17-jre-alpine
 
