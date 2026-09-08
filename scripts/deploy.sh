@@ -33,16 +33,16 @@ done
 COMPOSE_FILE="docker-compose.prod.yml"
 
 echo "Stopping existing containers..."
-docker-compose -f $COMPOSE_FILE $COMPOSE_PROFILE down || true
+docker compose -f $COMPOSE_FILE $COMPOSE_PROFILE down || true
 
 echo "Building images..."
-docker-compose -f $COMPOSE_FILE build --no-cache
+docker compose -f $COMPOSE_FILE build --no-cache
 
 echo "Cleaning up old images and build cache..."
 docker system prune -f
 
 echo "Starting services..."
-docker-compose -f $COMPOSE_FILE $COMPOSE_PROFILE up -d
+docker compose -f $COMPOSE_FILE $COMPOSE_PROFILE up -d
 
 echo "Waiting for backend to be ready..."
 for i in {1..30}; do
@@ -67,7 +67,7 @@ echo "[deploy] Daily database backup cron installed"
 
 echo ""
 echo "Useful commands:"
-echo "  docker-compose logs -f backend  # View backend logs"
-echo "  docker-compose logs -f frontend # View frontend logs"
-echo "  docker-compose down             # Stop services"
-echo "  docker-compose restart           # Restart services"
+echo "  docker compose logs -f backend  # View backend logs"
+echo "  docker compose logs -f frontend # View frontend logs"
+echo "  docker compose down             # Stop services"
+echo "  docker compose restart           # Restart services"
